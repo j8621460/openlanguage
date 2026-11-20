@@ -13,16 +13,14 @@ import com.palabrasfuncionales.app.data.DictionaryRepository
 import com.palabrasfuncionales.app.data.Entry
 import com.palabrasfuncionales.app.data.Lang
 import com.palabrasfuncionales.app.databinding.SheetEntryBinding
-import com.palabrasfuncionales.app.net.GoogleTranslator
+import com.palabrasfuncionales.app.net.TranslationService
 import com.palabrasfuncionales.app.net.TranslateException
-import com.palabrasfuncionales.app.security.SecureStore
 import com.palabrasfuncionales.app.util.Speaker
 import com.palabrasfuncionales.app.util.copyToClipboard
-import com.palabrasfuncionales.app.util.openUri
 import com.palabrasfuncionales.app.util.toast
 import kotlinx.coroutines.launch
 
-/** Detail view of one dictionary entry, with English via Google Translate. */
+/** Detail view of one dictionary entry, with English via on-device Google translation. */
 class EntrySheet : BottomSheetDialogFragment() {
     private var _b: SheetEntryBinding? = null
     private val b get() = _b!!
@@ -73,21 +71,15 @@ class EntrySheet : BottomSheetDialogFragment() {
 
     private fun translate(lang: Lang, e: Entry) {
         val ctx = requireContext()
-        val key = SecureStore(ctx).getApiKey()
-        if (key.isNullOrBlank()) {
-            // No key: hand the meaning to Google Translate in the browser / app.
-            ctx.toast(R.string.no_key_opening_web)
-            ctx.openUri(GoogleTranslator.webUri(e.spanish, "es", "en"))
-            return
-        }
         b.english.isEnabled = false
         b.englishProgress.isVisible = true
+        val onDownloading: (List<String>) -> Unit = { codes -> ctx.toast(TranslateErrors.downloading(ctx, codes)) }
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 // The Spanish meaning is more precise than the bare function word.
-                val meaning = GoogleTranslator.translate(ctx, key, e.spanish, "es", "en")
-                val example = e.example?.let { GoogleTranslator.translate(ctx, key, it, lang.code, "en") }
-                    ?: e.exampleSpanish?.let { GoogleTranslator.translate(ctx, key, it, "es", "en") }
+                val meaning = TranslationService.translate(ctx, e.spanish, "es", "en", onDownloading = onDownloading)
+                val example = e.example?.let { TranslationService.translate(ctx, it, lang.code, "en", onDownloading = onDownloading) }
+                    ?: e.exampleSpanish?.let { TranslationService.translate(ctx, it, "es", "en") }
                 if (_b == null) return@launch
                 b.englishMeaning.text = meaning.text
                 b.englishMeaning.isVisible = true

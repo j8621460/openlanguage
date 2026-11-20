@@ -1,12 +1,18 @@
 package com.palabrasfuncionales.app.ui
 
+import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.palabrasfuncionales.app.R
@@ -15,24 +21,35 @@ import com.palabrasfuncionales.app.data.Languages
 import com.palabrasfuncionales.app.databinding.FragmentTranslatorBinding
 import com.palabrasfuncionales.app.net.GoogleTranslator
 import com.palabrasfuncionales.app.net.TranslateException
-import com.palabrasfuncionales.app.security.SecureStore
+import com.palabrasfuncionales.app.net.TranslationService
 import com.palabrasfuncionales.app.util.Speaker
 import com.palabrasfuncionales.app.util.copyToClipboard
 import com.palabrasfuncionales.app.util.openUri
 import com.palabrasfuncionales.app.util.toast
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicReference
 
+/** A small Google-Translate-style screen: type or speak, translation appears as you type. */
 class TranslatorFragment : Fragment() {
     private var _b: FragmentTranslatorBinding? = null
     private val b get() = _b!!
     private var speaker: Speaker? = null
+    private var liveJob: Job? = null
+    private var settingTextProgrammatically = false
 
     /** Source choices: null = detect automatically. */
     private val sources: List<Lang?> = listOf(null) + Languages.dictionary + Languages.spanish + Languages.english
     private val targets: List<Lang> = Languages.all
     private var source: Lang? = null
     private var target: Lang = Languages.english
+
+    private val speech = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { res ->
+        if (res.resultCode != Activity.RESULT_OK) return@registerForActivityResult
+        val heard = res.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.firstOrNull()
+        if (!heard.isNullOrBlank()) setInput(heard)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, s: Bundle?): View {
         _b = FragmentTranslatorBinding.inflate(inflater, container, false)
@@ -48,51 +65,39 @@ class TranslatorFragment : Fragment() {
         val detect = getString(R.string.detect_language)
         b.source.setAdapter(ArrayAdapter(requireContext(), R.layout.item_dropdown, sources.map { it?.label ?: detect }))
         b.target.setAdapter(ArrayAdapter(requireContext(), R.layout.item_dropdown, targets.map { it.label }))
-        b.source.setOnItemClickListener { _, _, pos, _ -> source = sources[pos]; saveLangs() }
-        b.target.setOnItemClickListener { _, _, pos, _ -> target = targets[pos]; saveLangs() }
+        b.source.setOnItemClickListener { _, _, pos, _ -> source = sources[pos]; saveLangs(); scheduleLive(0) }
+        b.target.setOnItemClickListener { _, _, pos, _ -> target = targets[pos]; saveLangs(); scheduleLive(0) }
         showLangs()
 
-        b.swap.setOnClickListener {
-            val s = source ?: return@setOnClickListener requireContext().toast(R.string.swap_needs_source)
-            val oldTarget = target
-            target = s
-            source = oldTarget
-            val out = b.output.text.toString()
-            if (out.isNotBlank()) b.input.setText(out)
-            b.outputCard.isVisible = false
-            showLangs()
-            saveLangs()
-        }
-
+        b.swap.setOnClickListener { swap() }
         b.inputLayout.counterMaxLength = GoogleTranslator.MAX_INPUT_CHARS
-        b.translate.setOnClickListener { translate() }
+        b.input.doAfterTextChanged {
+            if (settingTextProgrammatically) return@doAfterTextChanged
+            b.inputLayout.error = null
+            if (it.isNullOrBlank()) clearOutput() else scheduleLive(LIVE_DELAY_MS)
+        }
+        b.translate.setOnClickListener { translate(allowDownload = true) }
+        b.mic.setOnClickListener { listen() }
+        b.listenInput.setOnClickListener {
+            val text = b.input.text?.toString().orEmpty()
+            val lang = source ?: Languages.byCode(lastDetected)
+            if (text.isNotBlank() && lang != null) speak(text, lang)
+        }
         b.openWeb.setOnClickListener {
             val text = b.input.text?.toString().orEmpty()
-            if (text.isBlank()) return@setOnClickListener
-            requireContext().openUri(GoogleTranslator.webUri(text, source?.code, target.code))
+            if (text.isNotBlank()) requireContext().openUri(GoogleTranslator.webUri(text, source?.code, target.code))
         }
         b.copyOutput.setOnClickListener {
             b.output.text.toString().takeIf { it.isNotBlank() }?.let { requireContext().copyToClipboard(it) }
         }
         b.listenOutput.setOnClickListener {
             val text = b.output.text.toString()
-            if (text.isBlank()) return@setOnClickListener
-            speaker?.speak(text, target.ttsTag) { ok ->
-                if (!ok) context?.let { it.toast(it.getString(R.string.no_voice, target.english)) }
-            }
+            if (text.isNotBlank()) speak(text, target)
         }
         pendingInput.getAndSet(null)?.let { setInput(it) }
     }
 
-    override fun onResume() {
-        super.onResume()
-        _b?.noKeyHint?.isVisible = !SecureStore(requireContext()).hasApiKey()
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden) _b?.noKeyHint?.isVisible = !SecureStore(requireContext()).hasApiKey()
-    }
+    private var lastDetected: String? = null
 
     fun setInput(text: String) {
         val binding = _b
@@ -101,7 +106,55 @@ class TranslatorFragment : Fragment() {
             return
         }
         binding.input.setText(text.take(GoogleTranslator.MAX_INPUT_CHARS))
-        translate()
+        binding.input.setSelection(binding.input.length())
+        translate(allowDownload = true)
+    }
+
+    private fun swap() {
+        val s = source ?: Languages.byCode(lastDetected)
+        if (s == null) {
+            requireContext().toast(R.string.swap_needs_source)
+            return
+        }
+        val oldTarget = target
+        target = s
+        source = oldTarget
+        val out = b.output.text.toString()
+        settingTextProgrammatically = true
+        if (out.isNotBlank()) b.input.setText(out)
+        settingTextProgrammatically = false
+        showLangs()
+        saveLangs()
+        translate(allowDownload = true)
+    }
+
+    private fun listen() {
+        val lang = source ?: Languages.byCode(lastDetected)
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+            .putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            .putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.speak_now))
+        lang?.let { intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, it.ttsTag) }
+        try {
+            speech.launch(intent)
+        } catch (e: ActivityNotFoundException) {
+            requireContext().toast(R.string.no_speech_input)
+        }
+    }
+
+    private fun speak(text: String, lang: Lang) {
+        speaker?.speak(text, lang.ttsTag) { ok ->
+            if (!ok) context?.let { it.toast(it.getString(R.string.no_voice, lang.english)) }
+        }
+    }
+
+    /** Translate-as-you-type: only uses language packs already on the phone. */
+    private fun scheduleLive(delayMs: Long) {
+        liveJob?.cancel()
+        if (b.input.text.isNullOrBlank()) return
+        liveJob = viewLifecycleOwner.lifecycleScope.launch {
+            delay(delayMs)
+            translate(allowDownload = false)
+        }
     }
 
     private fun showLangs() {
@@ -113,38 +166,50 @@ class TranslatorFragment : Fragment() {
         prefs().edit().putString(KEY_SRC, source?.code).putString(KEY_DST, target.code).apply()
     }
 
-    private fun translate() {
+    private fun clearOutput() {
+        liveJob?.cancel()
+        b.outputCard.isVisible = false
+        b.output.text = ""
+        b.status.isVisible = false
+    }
+
+    private fun translate(allowDownload: Boolean) {
         val ctx = requireContext()
         val text = b.input.text?.toString()?.trim().orEmpty()
         if (text.isEmpty()) {
-            b.inputLayout.error = getString(R.string.type_something)
+            if (allowDownload) b.inputLayout.error = getString(R.string.type_something)
             return
         }
-        b.inputLayout.error = null
-        val key = SecureStore(ctx).getApiKey()
-        if (key.isNullOrBlank()) {
-            ctx.toast(R.string.no_key_opening_web)
-            ctx.openUri(GoogleTranslator.webUri(text, source?.code, target.code))
-            return
-        }
-        b.translate.isEnabled = false
+        liveJob?.cancel()
         b.progress.isVisible = true
-        viewLifecycleOwner.lifecycleScope.launch {
+        liveJob = viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val result = GoogleTranslator.translate(ctx, key, text, source?.code, target.code)
+                val result = TranslationService.translate(ctx, text, source?.code, target.code, allowDownload) { codes ->
+                    _b?.status?.apply {
+                        this.text = TranslateErrors.downloading(ctx, codes)
+                        isVisible = true
+                    }
+                }
                 if (_b == null) return@launch
-                b.output.setText(result.text)
+                b.status.isVisible = false
+                b.output.text = result.text
                 b.outputCard.isVisible = true
+                lastDetected = result.detectedSource ?: lastDetected
                 val detected = result.detectedSource?.let { Languages.byCode(it)?.english ?: it }
                 b.detected.text = detected?.let { getString(R.string.detected_as, it) }
                 b.detected.isVisible = source == null && detected != null
             } catch (e: TranslateException) {
-                ctx.toast(TranslateErrors.message(ctx, e))
-            } finally {
-                _b?.let {
-                    it.translate.isEnabled = true
-                    it.progress.isVisible = false
+                if (_b == null) return@launch
+                if (e.kind == TranslateException.Kind.NEEDS_DOWNLOAD) {
+                    // Live mode never downloads; tell the user one tap is needed.
+                    b.status.text = getString(R.string.tap_translate_to_download)
+                    b.status.isVisible = true
+                } else if (allowDownload) {
+                    b.status.isVisible = false
+                    ctx.toast(TranslateErrors.message(ctx, e))
                 }
+            } finally {
+                _b?.progress?.isVisible = false
             }
         }
     }
@@ -152,6 +217,7 @@ class TranslatorFragment : Fragment() {
     private fun prefs() = requireContext().getSharedPreferences("ui", Context.MODE_PRIVATE)
 
     override fun onDestroyView() {
+        liveJob?.cancel()
         speaker?.shutdown()
         speaker = null
         _b = null
@@ -161,6 +227,7 @@ class TranslatorFragment : Fragment() {
     companion object {
         private const val KEY_SRC = "translator_source"
         private const val KEY_DST = "translator_target"
+        private const val LIVE_DELAY_MS = 600L
         /** Text handed over from another app before this screen had a view. */
         val pendingInput = AtomicReference<String?>(null)
     }

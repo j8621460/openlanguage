@@ -4,9 +4,13 @@ Offline dictionary of the A1–B1 function words from the eight guides
 (German, French, Italian, Portuguese, Dutch, Russian, Arabic, Irish → Spanish):
 **2,476 entries** with Spanish meaning, examples, "watch out" notes and chapter
 filter. Each entry can show its **English** meaning, and the **Translator** tab
-translates any text to English (or any of the 10 languages) with the
-**Google Cloud Translation API**. Without an API key, it opens Google Translate
-instead, so the app is fully usable with no setup.
+is a mini Google Translate (type or speak, translation appears as you type,
+listen, copy) between English, Spanish and the 8 languages.
+
+Translation is **free and needs no API key**: it uses **Google ML Kit**
+on-device translation. Each language pack (~30 MB) downloads once from Google
+(manage them in Settings); after that it works offline and your text never
+leaves the phone. A Google Cloud API key is optional.
 
 - minSdk 26 (Android 8.0), targetSdk/compileSdk 36 (Android 16)
 - Kotlin 2.1.21, AGP 8.10.1, Gradle 8.11.1, JDK 17, no Compose, 7 small AndroidX deps
@@ -33,16 +37,11 @@ instead, so the app is fully usable with no setup.
    `Palabras-release.apk`, and pushing a tag `v1.0.0` runs **🚀 Signed release**,
    which publishes `Palabras-v1.0.0.apk` + checksums on a GitHub Release.
 
-## 3. Google Translate API key
+## 3. Optional: Google Cloud API key
 
-1. In Google Cloud console, enable **Cloud Translation API** (needs billing;
-   the first 500,000 characters per month are free at the time of writing).
-2. *APIs & Services → Credentials → Create API key.*
-3. Restrict it: **API restrictions** → Cloud Translation API only;
-   **Application restrictions** → Android apps → add the package name and
-   SHA-1 shown in the app's Settings screen (debug builds are
-   `com.palabrasfuncionales.app.debug` with a different SHA-1 than release).
-4. Paste the key in **Settings → Save key → Test key**.
+Not needed. If you have a Cloud Translation API key, paste it in
+Settings and the app uses it instead of the offline packs. Restrict the key to
+the Cloud Translation API and to this app's package name + SHA-1 (shown in Settings).
 
 ## Security measures
 

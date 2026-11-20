@@ -34,8 +34,6 @@
     <string name="translate">Traducir</string>
     <string name="open_google_translate">Abrir en Google Traductor</string>
     <string name="detected_as">Detectado: %s</string>
-    <string name="no_key_hint">Aún no hay clave de API. Traducir abre Google Traductor en el navegador. Añade una clave en Ajustes para traducir dentro de la app.</string>
-    <string name="no_key_opening_web">Sin clave de API: abriendo Google Traductor.</string>
     <string name="err_no_key">Añade una clave de API de Google Cloud en Ajustes.</string>
     <string name="err_bad_key">Google ha rechazado la clave de API. Revísala en Ajustes.</string>
     <string name="err_forbidden">Google ha denegado el acceso: %s. Comprueba que la Cloud Translation API está activada y que las restricciones de la clave coinciden con esta app.</string>
@@ -44,8 +42,8 @@
     <string name="err_other">La traducción ha fallado: %s</string>
     <string name="no_browser">No hay navegador para abrir el enlace.</string>
     <string name="copied">Copiado</string>
-    <string name="api_key_title">Google Cloud Translation</string>
-    <string name="api_key_body">El diccionario funciona sin conexión. Para traducir dentro de la app se usa tu propia clave de API de Google Cloud. Se guarda cifrada con el Android Keystore y solo sale del dispositivo para llamar a Google.</string>
+    <string name="api_key_title">Clave de Google Cloud (opcional)</string>
+    <string name="api_key_body">No hace falta. Solo si tienes una clave de la Cloud Translation API: entonces la app la usa en lugar de los paquetes sin conexión. Se guarda cifrada con el Android Keystore.</string>
     <string name="api_key_hint">Clave de API (empieza por AIza)</string>
     <string name="save_key">Guardar clave</string>
     <string name="test_key">Probar clave</string>
@@ -65,4 +63,23 @@
     <string name="about_title">Acerca de</string>
     <string name="about_body">Palabras funcionales (artículos, preposiciones, pronombres, conjunciones, pequeños adverbios) para estudiantes de A1 a B1, con significado en español, ejemplos y las trampas típicas de los hispanohablantes. Alemán, francés, italiano, portugués, neerlandés, ruso, árabe e irlandés.</string>
     <string name="version_text">Versión %1$s (%2$d)</string>
+    <string name="offline_title">Traducción gratis sin conexión</string>
+    <string name="offline_body">La traducción se hace en tu móvil con Google ML Kit: gratis, sin cuenta y sin clave de API. Cada paquete de idioma (unos 30 MB) se descarga una vez desde Google; después funciona sin internet y tu texto no sale del móvil.</string>
+    <string name="wifi_only">Descargar idiomas solo con wifi</string>
+    <string name="pack_ready">En este móvil</string>
+    <string name="pack_missing">Sin descargar</string>
+    <string name="pack_downloading">Descargando…</string>
+    <string name="pack_deleting">Borrando…</string>
+    <string name="download">Descargar</string>
+    <string name="delete">Borrar</string>
+    <string name="speak">Hablar</string>
+    <string name="speak_now">Habla ahora</string>
+    <string name="no_speech_input">No hay app de reconocimiento de voz en este móvil.</string>
+    <string name="offline_hint">Traducido en tu móvil con Google ML Kit. La primera vez que usas un idioma se descarga un paquete gratis de unos 30 MB.</string>
+    <string name="tap_translate_to_download">Pulsa Traducir para descargar el paquete del idioma (una vez, unos 30 MB).</string>
+    <string name="downloading_packs">Descargando %s (una vez, unos 30 MB cada uno)…</string>
+    <string name="err_unsupported">La traducción sin conexión no admite este idioma (%s).</string>
+    <string name="err_detect">No se ha podido detectar el idioma. Elígelo en De.</string>
+    <string name="err_needs_download">El paquete del idioma aún no está descargado.</string>
+    <string name="err_download">No se pudo descargar el paquete del idioma. Revisa la conexión (o el ajuste de solo wifi).</string>
 </resources>

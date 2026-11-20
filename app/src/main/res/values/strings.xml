@@ -41,8 +41,6 @@
     <string name="translate">Translate</string>
     <string name="open_google_translate">Open in Google Translate</string>
     <string name="detected_as">Detected: %s</string>
-    <string name="no_key_hint">No API key yet. Translate opens Google Translate in your browser. Add a key in Settings to translate inside the app.</string>
-    <string name="no_key_opening_web">No API key: opening Google Translate.</string>
 
     <!-- Errors -->
     <string name="err_no_key">Add a Google Cloud API key in Settings.</string>
@@ -55,8 +53,8 @@
     <string name="copied">Copied</string>
 
     <!-- Settings -->
-    <string name="api_key_title">Google Cloud Translation</string>
-    <string name="api_key_body">The dictionary works offline. Translating inside the app uses your own Google Cloud API key. It is stored encrypted with the Android Keystore and never leaves this device except to call Google.</string>
+    <string name="api_key_title">Google Cloud key (optional)</string>
+    <string name="api_key_body">Not needed. Only if you have a Google Cloud Translation API key: the app then uses it instead of the offline packs. It is stored encrypted with the Android Keystore.</string>
     <string name="api_key_hint">API key (starts with AIza)</string>
     <string name="save_key">Save key</string>
     <string name="test_key">Test key</string>
@@ -76,4 +74,23 @@
     <string name="about_title">About</string>
     <string name="about_body">Function words (articles, prepositions, pronouns, conjunctions, small adverbs) for A1 to B1 learners, with Spanish meanings, examples and the traps Spanish speakers fall into. German, French, Italian, Portuguese, Dutch, Russian, Arabic and Irish.</string>
     <string name="version_text">Version %1$s (%2$d)</string>
+    <string name="offline_title">Free offline translation</string>
+    <string name="offline_body">Translation runs on your phone with Google ML Kit: free, no account, no API key. Each language pack (about 30 MB) downloads once from Google; after that it works without internet and your text never leaves the phone.</string>
+    <string name="wifi_only">Download language packs only on Wi-Fi</string>
+    <string name="pack_ready">On this phone</string>
+    <string name="pack_missing">Not downloaded</string>
+    <string name="pack_downloading">Downloading…</string>
+    <string name="pack_deleting">Deleting…</string>
+    <string name="download">Download</string>
+    <string name="delete">Delete</string>
+    <string name="speak">Speak</string>
+    <string name="speak_now">Speak now</string>
+    <string name="no_speech_input">No speech recognition app on this phone.</string>
+    <string name="offline_hint">Translated on your phone by Google ML Kit. The first time you use a language it downloads a free pack of about 30 MB.</string>
+    <string name="tap_translate_to_download">Tap Translate to download the language pack (once, about 30 MB).</string>
+    <string name="downloading_packs">Downloading %s (once, about 30 MB each)…</string>
+    <string name="err_unsupported">Offline translation doesn\'t support this language (%s).</string>
+    <string name="err_detect">Couldn\'t tell the language. Choose it in From.</string>
+    <string name="err_needs_download">The language pack isn\'t downloaded yet.</string>
+    <string name="err_download">The language pack couldn\'t download. Check your connection (or the Wi-Fi-only setting).</string>
 </resources>

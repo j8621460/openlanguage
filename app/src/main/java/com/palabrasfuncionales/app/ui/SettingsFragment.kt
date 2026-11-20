@@ -1,5 +1,6 @@
 package com.palabrasfuncionales.app.ui
 
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +11,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.palabrasfuncionales.app.BuildConfig
 import com.palabrasfuncionales.app.R
+import com.palabrasfuncionales.app.data.Lang
+import com.palabrasfuncionales.app.data.Languages
 import com.palabrasfuncionales.app.databinding.FragmentSettingsBinding
+import com.palabrasfuncionales.app.databinding.ItemOfflineLangBinding
+import com.palabrasfuncionales.app.net.OfflineTranslator
 import com.palabrasfuncionales.app.net.GoogleTranslator
 import com.palabrasfuncionales.app.net.TranslateException
 import com.palabrasfuncionales.app.security.AppSignature
@@ -64,6 +69,49 @@ class SettingsFragment : Fragment() {
             requireContext().copyToClipboard("$pkg\n$sha")
         }
         b.version.text = getString(R.string.version_text, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
+
+        val ui = requireContext().getSharedPreferences("ui", Context.MODE_PRIVATE)
+        b.wifiOnly.isChecked = ui.getBoolean(OfflineTranslator.KEY_WIFI_ONLY, false)
+        b.wifiOnly.setOnCheckedChangeListener { _, checked ->
+            ui.edit().putBoolean(OfflineTranslator.KEY_WIFI_ONLY, checked).apply()
+        }
+        buildOfflineList()
+    }
+
+    /** One row per language: download / delete its on-device translation pack. */
+    private fun buildOfflineList() {
+        val inflater = LayoutInflater.from(requireContext())
+        b.offlineList.removeAllViews()
+        for (lang in Languages.all.filter { it.code != "en" }) {
+            val row = ItemOfflineLangBinding.inflate(inflater, b.offlineList, true)
+            row.name.text = lang.label
+            refreshRow(row, lang)
+        }
+    }
+
+    private fun refreshRow(row: ItemOfflineLangBinding, lang: Lang) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val downloaded = try { OfflineTranslator.isDownloaded(lang.code) } catch (e: Exception) { false }
+            if (_b == null) return@launch
+            row.state.setText(if (downloaded) R.string.pack_ready else R.string.pack_missing)
+            row.action.setText(if (downloaded) R.string.delete else R.string.download)
+            row.action.isEnabled = true
+            row.action.setOnClickListener {
+                row.action.isEnabled = false
+                row.state.setText(if (downloaded) R.string.pack_deleting else R.string.pack_downloading)
+                viewLifecycleOwner.lifecycleScope.launch {
+                    try {
+                        if (downloaded) OfflineTranslator.delete(lang.code)
+                        else OfflineTranslator.download(requireContext(), lang.code)
+                    } catch (e: TranslateException) {
+                        context?.let { it.toast(TranslateErrors.message(it, e)) }
+                    } catch (e: Exception) {
+                        context?.toast(R.string.err_download)
+                    }
+                    if (_b != null) refreshRow(row, lang)
+                }
+            }
+        }
     }
 
     private fun updateStatus() {

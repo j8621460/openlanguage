@@ -93,5 +93,8 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.material)
     implementation(libs.kotlinx.coroutines.android)
+    // Free on-device Google translation (no API key; models download once).
+    implementation(libs.mlkit.translate)
+    implementation(libs.mlkit.language.id)
     testImplementation(libs.junit)
 }

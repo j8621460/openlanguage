@@ -14,7 +14,7 @@ import java.net.URLEncoder
 import javax.net.ssl.HttpsURLConnection
 
 class TranslateException(message: String, val kind: Kind = Kind.OTHER) : Exception(message) {
-    enum class Kind { NO_KEY, BAD_KEY, FORBIDDEN, QUOTA, NETWORK, OTHER }
+    enum class Kind { NO_KEY, BAD_KEY, FORBIDDEN, QUOTA, NETWORK, OTHER, UNSUPPORTED, DETECT, NEEDS_DOWNLOAD, DOWNLOAD }
 }
 
 data class Translation(val text: String, val detectedSource: String?)
