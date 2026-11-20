@@ -2,7 +2,7 @@
 # Dependabot (.github/dependabot.yml) proposes updates as pull requests.
 [versions]
 agp = "8.10.1"
-kotlin = "2.1.21"
+kotlin = "2.4.21"
 coreKtx = "1.13.1"
 appcompat = "1.7.0"
 activity = "1.9.3"
