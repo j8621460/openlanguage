@@ -81,6 +81,7 @@ jobs:
               echo "::error title=Gradle failure::$(echo "$why" | tr '\n' '|' | cut -c1-1800)"
               { echo '### Gradle failure'; echo '```'; echo "$why"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
             fi
+            echo "::error title=Log tail::$(tail -60 /tmp/unit.log | cut -c1-220 | sed 's/%/%25/g' | tr '\n' '|')"
             exit 1
           fi
 
