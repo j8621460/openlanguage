@@ -1,0 +1,19 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ['*']
+  - package-ecosystem: gradle
+    directory: /
+    schedule:
+      interval: weekly
+    # Wait two weeks before proposing a new version (supply-chain safety).
+    cooldown:
+      default-days: 14
+    groups:
+      androidx:
+        patterns: ['androidx.*', 'com.google.android.material*']

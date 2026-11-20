@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Palabras</string>
+    <string name="process_text_label">Translate with Palabras</string>
+
+    <string name="nav_dictionary">Dictionary</string>
+    <string name="nav_translator">Translator</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Dictionary -->
+    <string name="language">Language</string>
+    <string name="section">Section</string>
+    <string name="all_sections">All sections</string>
+    <string name="search_hint">Search a word or its Spanish meaning</string>
+    <string name="no_results">No word matches. Try fewer letters, or search the Spanish meaning.</string>
+    <plurals name="word_count">
+        <item quantity="one">%d entry</item>
+        <item quantity="other">%d entries</item>
+    </plurals>
+    <string name="note_marker">Note</string>
+
+    <!-- Entry sheet -->
+    <string name="entry_language">%1$s, %2$s</string>
+    <string name="spanish_label">Spanish</string>
+    <string name="english_label">English</string>
+    <string name="example_label">Example</string>
+    <string name="watch_out">Watch out</string>
+    <string name="listen">Listen</string>
+    <string name="copy">Copy</string>
+    <string name="show_english">Show English</string>
+    <string name="no_voice">No %1$s voice is installed. Add one in the system text-to-speech settings.</string>
+
+    <!-- Translator -->
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="swap">Swap languages</string>
+    <string name="detect_language">Detect language</string>
+    <string name="swap_needs_source">Pick a source language to swap.</string>
+    <string name="input_hint">Text to translate</string>
+    <string name="type_something">Type or paste some text first.</string>
+    <string name="translate">Translate</string>
+    <string name="open_google_translate">Open in Google Translate</string>
+    <string name="detected_as">Detected: %s</string>
+    <string name="no_key_hint">No API key yet. Translate opens Google Translate in your browser. Add a key in Settings to translate inside the app.</string>
+    <string name="no_key_opening_web">No API key: opening Google Translate.</string>
+
+    <!-- Errors -->
+    <string name="err_no_key">Add a Google Cloud API key in Settings.</string>
+    <string name="err_bad_key">Google rejected the API key. Check it in Settings.</string>
+    <string name="err_forbidden">Access denied by Google: %s. Check that the Cloud Translation API is enabled and that the key restrictions match this app.</string>
+    <string name="err_quota">Translation quota reached. Try again later.</string>
+    <string name="err_network">No connection to Google. Check your internet.</string>
+    <string name="err_other">Translation failed: %s</string>
+    <string name="no_browser">No browser installed to open the link.</string>
+    <string name="copied">Copied</string>
+
+    <!-- Settings -->
+    <string name="api_key_title">Google Cloud Translation</string>
+    <string name="api_key_body">The dictionary works offline. Translating inside the app uses your own Google Cloud API key. It is stored encrypted with the Android Keystore and never leaves this device except to call Google.</string>
+    <string name="api_key_hint">API key (starts with AIza)</string>
+    <string name="save_key">Save key</string>
+    <string name="test_key">Test key</string>
+    <string name="remove_key">Remove key</string>
+    <string name="get_key">Get a key</string>
+    <string name="key_saved">Key saved</string>
+    <string name="key_removed">Key removed</string>
+    <string name="key_looks_wrong">That doesn\'t look like a Google API key (AIza followed by 35 characters).</string>
+    <string name="key_status_saved">A key is saved on this device.</string>
+    <string name="key_status_none">No key saved.</string>
+    <string name="key_works">The key works: %s</string>
+    <string name="restrict_title">Lock the key to this app</string>
+    <string name="restrict_body">In Google Cloud console, under Credentials, set the key\'s application restriction to Android apps and add this package name and SHA-1 fingerprint. Also limit the key to the Cloud Translation API.</string>
+    <string name="package_label">Package name</string>
+    <string name="sha_label">SHA-1 fingerprint</string>
+    <string name="copy_both">Copy both</string>
+    <string name="about_title">About</string>
+    <string name="about_body">Function words (articles, prepositions, pronouns, conjunctions, small adverbs) for A1 to B1 learners, with Spanish meanings, examples and the traps Spanish speakers fall into. German, French, Italian, Portuguese, Dutch, Russian, Arabic and Irish.</string>
+    <string name="version_text">Version %1$s (%2$d)</string>
+</resources>

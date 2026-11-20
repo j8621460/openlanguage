@@ -1,0 +1,24 @@
+rules:
+  - id: hardcoded-google-api-key
+    message: A Google API key is hardcoded. Users enter their own key in Settings; it is stored with SecureStore.
+    severity: ERROR
+    languages: [kotlin, java]
+    pattern-regex: AIza[0-9A-Za-z_\-]{35}
+
+  - id: cleartext-http-url
+    message: Plain http:// URL. The app only allows HTTPS (network_security_config.xml).
+    severity: WARNING
+    languages: [kotlin, java]
+    pattern-regex: '"http://[^"]+"'
+
+  - id: api-key-logged
+    message: Never log the API key.
+    severity: ERROR
+    languages: [kotlin, java]
+    pattern-regex: 'Log\.[a-z]\(.*(?i:api_?key)'
+
+  - id: api-key-in-url
+    message: Put the API key in the X-Goog-Api-Key header, not in the URL.
+    severity: ERROR
+    languages: [kotlin, java]
+    pattern-regex: '[?&]key=\$'

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ink">#A9C1EC</color>
+    <color name="on_ink">#0B2547</color>
+    <color name="ink_container">#2B4471</color>
+    <color name="on_ink_container">#D9E2F4</color>
+    <color name="amber">#E8C35A</color>
+    <color name="on_amber">#3D2F00</color>
+    <color name="amber_container">#4F4011</color>
+    <color name="on_amber_container">#FFE7A3</color>
+    <color name="page">#11151C</color>
+    <color name="on_page">#E3E6EC</color>
+    <color name="surface">#181D26</color>
+    <color name="surface_variant">#2A313D</color>
+    <color name="on_surface_variant">#C3C8D3</color>
+    <color name="outline">#8D94A3</color>
+    <color name="outline_variant">#3C4452</color>
+    <color name="error">#F2B8B5</color>
+</resources>

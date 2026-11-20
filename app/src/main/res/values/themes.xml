@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Palabras" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/ink</item>
+        <item name="colorOnPrimary">@color/on_ink</item>
+        <item name="colorPrimaryContainer">@color/ink_container</item>
+        <item name="colorOnPrimaryContainer">@color/on_ink_container</item>
+        <item name="colorSecondary">@color/ink</item>
+        <item name="colorOnSecondary">@color/on_ink</item>
+        <item name="colorSecondaryContainer">@color/ink_container</item>
+        <item name="colorOnSecondaryContainer">@color/on_ink_container</item>
+        <item name="colorTertiary">@color/amber</item>
+        <item name="colorOnTertiary">@color/on_amber</item>
+        <item name="colorTertiaryContainer">@color/amber_container</item>
+        <item name="colorOnTertiaryContainer">@color/on_amber_container</item>
+        <item name="android:colorBackground">@color/page</item>
+        <item name="colorOnBackground">@color/on_page</item>
+        <item name="colorSurface">@color/page</item>
+        <item name="colorOnSurface">@color/on_page</item>
+        <item name="colorSurfaceVariant">@color/surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
+        <item name="colorSurfaceContainerLowest">@color/surface</item>
+        <item name="colorSurfaceContainerLow">@color/surface</item>
+        <item name="colorSurfaceContainer">@color/surface</item>
+        <item name="colorSurfaceContainerHigh">@color/surface</item>
+        <item name="colorSurfaceContainerHighest">@color/surface_variant</item>
+        <item name="colorOutline">@color/outline</item>
+        <item name="colorOutlineVariant">@color/outline_variant</item>
+        <item name="colorError">@color/error</item>
+    </style>
+
+    <!-- Headwords: a serif face, like a printed dictionary. -->
+    <style name="TextAppearance.Palabras.Headword" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:fontFamily">serif</item>
+        <item name="fontFamily">serif</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+    <style name="TextAppearance.Palabras.HeadwordLarge" parent="TextAppearance.Material3.DisplaySmall">
+        <item name="android:fontFamily">serif</item>
+        <item name="fontFamily">serif</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+    <style name="TextAppearance.Palabras.Meta" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+    </style>
+    <style name="TextAppearance.Palabras.Translit" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+    </style>
+</resources>

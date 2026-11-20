@@ -1,0 +1,106 @@
+name: 🛡️ CodeQL & detekt
+
+# CodeQL static analysis of the Kotlin code and of these workflow files,
+# plus detekt (Kotlin static analysis). Findings: Security → Code scanning.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 12 * * 1' # weekly: new queries find old bugs
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  codeql:
+    name: CodeQL (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: java-kotlin
+            build-mode: manual # Kotlin needs a real compile to be analysed
+          - language: actions
+            build-mode: none
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: github/codeql-action/init@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+          queries: security-extended,security-and-quality
+      - if: matrix.build-mode == 'manual'
+        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4.9.1
+        with:
+          java-version: "17"
+          distribution: temurin
+      - if: matrix.build-mode == 'manual'
+        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+        with:
+          cache-read-only: true
+      - if: matrix.build-mode == 'manual'
+        uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3.2.2
+        with:
+          packages: 'platforms;android-36 build-tools;36.0.0'
+      - name: Build for analysis
+        if: matrix.build-mode == 'manual'
+        run: |
+          chmod +x gradlew
+          # No build cache, or CodeQL would not see the compiler run.
+          ./gradlew assembleDebug --no-build-cache --no-configuration-cache --rerun-tasks
+      - uses: github/codeql-action/analyze@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
+        with:
+          category: /language:${{ matrix.language }}
+
+  detekt:
+    name: detekt (report only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      security-events: write
+    env:
+      DETEKT_VER: "1.23.8"
+      # sha256 of detekt-cli-1.23.8-all.jar; set it to pin the download
+      # (leave empty to skip the check).
+      DETEKT_SHA256: ""
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4.9.1
+        with:
+          java-package: jdk
+          java-version: "17"
+          distribution: temurin
+      - name: Run detekt
+        run: |
+          set -eu
+          curl -fsSL --retry 3 -o detekt.jar \
+            "https://github.com/detekt/detekt/releases/download/v${DETEKT_VER}/detekt-cli-${DETEKT_VER}-all.jar"
+          if [ -n "$DETEKT_SHA256" ]; then echo "$DETEKT_SHA256  detekt.jar" | sha256sum -c -; fi
+          java -jar detekt.jar \
+            --input app/src/main/java \
+            --excludes '**/test/**' \
+            --jvm-target 17 \
+            --report sarif:detekt.sarif || true
+      - if: always() && hashFiles('detekt.sarif') != ''
+        uses: github/codeql-action/upload-sarif@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
+        with:
+          sarif_file: detekt.sarif
+          category: detekt

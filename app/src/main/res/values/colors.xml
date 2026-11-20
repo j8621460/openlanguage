@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ink blue of a cloth-bound dictionary, cool page white, and the amber of
+     the guides' "Ojo" boxes for warnings and false friends. -->
+<resources>
+    <color name="ink">#233A5E</color>
+    <color name="on_ink">#FFFFFF</color>
+    <color name="ink_container">#D9E2F4</color>
+    <color name="on_ink_container">#0E1F3A</color>
+    <color name="amber">#B8860B</color>
+    <color name="on_amber">#FFFFFF</color>
+    <color name="amber_container">#FFF1C9</color>
+    <color name="on_amber_container">#4A3A00</color>
+    <color name="page">#F5F7FA</color>
+    <color name="on_page">#1A1F28</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_variant">#E5E9F0</color>
+    <color name="on_surface_variant">#4A5263</color>
+    <color name="outline">#7B8396</color>
+    <color name="outline_variant">#C7CDD8</color>
+    <color name="error">#B3261E</color>
+</resources>
