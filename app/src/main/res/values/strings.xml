@@ -3,7 +3,7 @@
     <string name="app_name">Palabras</string>
     <string name="process_text_label">Translate with Palabras</string>
 
-    <string name="nav_dictionary">Dictionary</string>
+    <string name="nav_dictionary">Grammar</string>
     <string name="nav_translator">Translator</string>
     <string name="nav_settings">Settings</string>
 
@@ -74,7 +74,7 @@
     <string name="about_title">About</string>
     <string name="about_body">Function words (articles, prepositions, pronouns, conjunctions, small adverbs) for A1 to B1 learners, with Spanish meanings, examples and the traps Spanish speakers fall into. German, French, Italian, Portuguese, Dutch, Russian, Arabic and Irish.</string>
     <string name="version_text">Version %1$s (%2$d)</string>
-    <string name="offline_title">Free offline translation</string>
+    <string name="offline_title">Free translation</string>
     <string name="offline_body">Translation runs on your phone with Google ML Kit: free, no account, no API key. Each language pack (about 30 MB) downloads once from Google; after that it works without internet and your text never leaves the phone.</string>
     <string name="wifi_only">Download language packs only on Wi-Fi</string>
     <string name="pack_ready">On this phone</string>
@@ -86,7 +86,7 @@
     <string name="speak">Speak</string>
     <string name="speak_now">Speak now</string>
     <string name="no_speech_input">No speech recognition app on this phone.</string>
-    <string name="offline_hint">Translated on your phone by Google ML Kit. The first time you use a language it downloads a free pack of about 30 MB.</string>
+    <string name="offline_hint">With internet: free Google Translate, every language, with pronunciation. Without internet: Google ML Kit packs on your phone (about 30 MB per language, downloaded once).</string>
     <string name="tap_translate_to_download">Tap Translate to download the language pack (once, about 30 MB).</string>
     <string name="downloading_packs">Downloading %s (once, about 30 MB each)…</string>
     <string name="err_unsupported">Offline translation doesn\'t include this language (%s). Use «Open in Google Translate».</string>

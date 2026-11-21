@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -29,6 +30,7 @@ import com.palabrasfuncionales.app.learn.SrsStore
 import com.palabrasfuncionales.app.learn.Streak
 import com.palabrasfuncionales.app.util.Speaker
 import com.palabrasfuncionales.app.util.toast
+import com.palabrasfuncionales.app.vocab.VocabRepository
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -59,6 +61,11 @@ class StudyActivity : AppCompatActivity() {
     private var quizDone = 0
     private val rnd = Random(System.nanoTime())
     private lateinit var optionButtons: List<MaterialButton>
+    private var source = SOURCE_FUNC
+    private var timed = false
+    private var timer: CountDownTimer? = null
+    private var timedScore = 0
+    private var timedOver = false
     private var baseTint: ColorStateList? = null
     private var baseText: ColorStateList? = null
 
@@ -84,16 +91,24 @@ class StudyActivity : AppCompatActivity() {
         b.quizListen.setOnClickListener { current?.let { speak(it.entry) } }
         b.quizContinue.setOnClickListener { nextQuestion() }
         b.finish.setOnClickListener { finish() }
-        b.repeat.setOnClickListener { start(lesson?.key) }
+        b.repeat.setOnClickListener { if (timed) startTimed() else start(lesson?.key) }
         b.nextLesson.setOnClickListener { nextLessonAfter(lesson)?.let { start(it.key) } }
 
         val code = intent.getStringExtra(EXTRA_LANG) ?: return finish()
+        source = intent.getStringExtra(EXTRA_SOURCE) ?: SOURCE_FUNC
+        timed = intent.getBooleanExtra(EXTRA_TIMED, false)
         lifecycleScope.launch {
-            val p = DictionaryRepository.load(this@StudyActivity, code)
+            val p = if (source == SOURCE_VOCAB) VocabRepository.pack(this@StudyActivity, code)
+            else DictionaryRepository.load(this@StudyActivity, code)
             pack = p
-            store = SrsStore(this@StudyActivity, code)
+            store = SrsStore(this@StudyActivity, if (source == SOURCE_VOCAB) vocabStoreCode(code) else code)
             lessons = Lessons.build(p)
-            start(intent.getStringExtra(EXTRA_LESSON))
+            if (p.entries.size < 4) {
+                toast(R.string.vocab_not_ready)
+                finish()
+                return@launch
+            }
+            if (timed) startTimed() else start(intent.getStringExtra(EXTRA_LESSON))
         }
     }
 
@@ -178,10 +193,15 @@ class StudyActivity : AppCompatActivity() {
 
     private fun nextQuestion() {
         val q = queue.removeFirstOrNull() ?: return finishSession()
+        render(q)
+    }
+
+    private fun render(q: Question) {
         val p = pack ?: return
         current = q
         answered = false
-        b.quizStep.text = getString(R.string.step_practice, quizDone + 1, quizTotal)
+        b.quizStep.text = if (timed) getString(R.string.timed_score_live, timedScore)
+        else getString(R.string.step_practice, quizDone + 1, quizTotal)
         b.quizAsk.text = if (q.reverse) getString(R.string.ask_reverse, p.lang.english) else getString(R.string.ask_forward)
         b.quizPrompt.text = if (q.reverse) q.entry.spanish else q.entry.word
         b.quizReading.text = q.entry.readingAid
@@ -197,7 +217,64 @@ class StudyActivity : AppCompatActivity() {
             btn.backgroundTintList = baseTint
             baseText?.let { btn.setTextColor(it) }
         }
-        updateProgress()
+        if (!timed) updateProgress()
+    }
+
+    // ---- 60-second game ----------------------------------------------------
+
+    private fun startTimed() {
+        val p = pack ?: return
+        lesson = null
+        cards = p.entries.filter { it.spanish.isNotBlank() }
+        timedScore = 0
+        quizDone = 0
+        timedOver = false
+        b.toolbar.title = getString(R.string.timed_title)
+        showPane(b.quizPane)
+        b.progress.max = TIMED_MS.toInt()
+        timer?.cancel()
+        timer = object : CountDownTimer(TIMED_MS, 250) {
+            override fun onTick(left: Long) {
+                b.toolbar.subtitle = getString(R.string.seconds_left, (left / 1000 + 1).toInt())
+                b.progress.setProgressCompat((TIMED_MS - left).toInt(), false)
+            }
+
+            override fun onFinish() {
+                timedOver = true
+                finishTimed()
+            }
+        }.start()
+        nextTimed()
+    }
+
+    private fun nextTimed() {
+        val p = pack ?: return
+        if (timedOver || isFinishing) return
+        val e = cards[rnd.nextInt(cards.size)]
+        render(Quiz.make(e, p.entries, rnd.nextBoolean(), rnd))
+    }
+
+    private fun finishTimed() {
+        timer?.cancel()
+        b.toolbar.subtitle = null
+        val code = pack?.lang?.code ?: return
+        val prefs = getSharedPreferences("stats", MODE_PRIVATE)
+        val key = bestKey(source, code)
+        val best = prefs.getInt(key, 0)
+        val record = timedScore > best
+        if (record) prefs.edit().putInt(key, timedScore).apply()
+        Streak.record(this)
+        showPane(b.resultPane)
+        b.progress.setProgressCompat(b.progress.max, true)
+        b.resultTitle.setText(R.string.time_up)
+        b.resultScore.text = resources.getQuantityString(R.plurals.timed_score, timedScore, timedScore)
+        b.resultNext.text = if (record) getString(R.string.new_record) else getString(R.string.timed_best, best)
+        b.resultStreak.text = getString(R.string.streak_days, Streak.current(this))
+        val tips = resources.getStringArray(R.array.learning_tips)
+        b.resultTip.text = tips[rnd.nextInt(tips.size)]
+        b.repeat.isVisible = true
+        b.repeat.setText(R.string.play_again)
+        b.nextLesson.isVisible = false
     }
 
     private fun onAnswer(index: Int) {
@@ -206,6 +283,13 @@ class StudyActivity : AppCompatActivity() {
         if (answered) return
         answered = true
         val correct = index == q.answer
+        if (timed) {
+            if (correct) timedScore++
+            paintAnswer(q, index)
+            b.quizStep.text = getString(R.string.timed_score_live, timedScore)
+            b.root.postDelayed({ nextTimed() }, if (correct) 450L else 1300L)
+            return
+        }
         val key = q.entry.cardKey
         if (key !in firstTry) firstTry[key] = correct
         if (!correct && retried.add(key)) {
@@ -214,17 +298,7 @@ class StudyActivity : AppCompatActivity() {
             quizTotal++
         }
         quizDone++
-        val good = MaterialColors.getColor(b.root, com.google.android.material.R.attr.colorPrimaryContainer)
-        val onGood = MaterialColors.getColor(b.root, com.google.android.material.R.attr.colorOnPrimaryContainer)
-        val bad = MaterialColors.getColor(b.root, com.google.android.material.R.attr.colorErrorContainer)
-        val onBad = MaterialColors.getColor(b.root, com.google.android.material.R.attr.colorOnErrorContainer)
-        optionButtons.forEachIndexed { i, btn ->
-            btn.isEnabled = false
-            when (i) {
-                q.answer -> { btn.backgroundTintList = ColorStateList.valueOf(good); btn.setTextColor(onGood) }
-                index -> { btn.backgroundTintList = ColorStateList.valueOf(bad); btn.setTextColor(onBad) }
-            }
-        }
+        paintAnswer(q, index)
         val praise = resources.getStringArray(R.array.praise)
         val example = listOfNotNull(q.entry.example ?: q.entry.exampleTranslit, q.entry.exampleSpanish?.let { "($it)" })
             .joinToString(" ")
@@ -238,6 +312,20 @@ class StudyActivity : AppCompatActivity() {
         b.quizContinue.setText(if (queue.isEmpty()) R.string.see_result else R.string.next)
         speak(q.entry, quiet = true)
         updateProgress()
+    }
+
+    private fun paintAnswer(q: Question, index: Int) {
+        val good = MaterialColors.getColor(b.root, com.google.android.material.R.attr.colorPrimaryContainer)
+        val onGood = MaterialColors.getColor(b.root, com.google.android.material.R.attr.colorOnPrimaryContainer)
+        val bad = MaterialColors.getColor(b.root, com.google.android.material.R.attr.colorErrorContainer)
+        val onBad = MaterialColors.getColor(b.root, com.google.android.material.R.attr.colorOnErrorContainer)
+        optionButtons.forEachIndexed { i, btn ->
+            btn.isEnabled = false
+            when (i) {
+                q.answer -> { btn.backgroundTintList = ColorStateList.valueOf(good); btn.setTextColor(onGood) }
+                index -> { btn.backgroundTintList = ColorStateList.valueOf(bad); btn.setTextColor(onBad) }
+            }
+        }
     }
 
     // ---- 3. Result ---------------------------------------------------------
@@ -270,6 +358,7 @@ class StudyActivity : AppCompatActivity() {
         val tips = resources.getStringArray(R.array.learning_tips)
         b.resultTip.text = tips[rnd.nextInt(tips.size)]
         b.repeat.isVisible = lesson != null
+        b.repeat.setText(R.string.repeat_lesson)
         b.nextLesson.isVisible = nextLessonAfter(lesson) != null
     }
 
@@ -302,6 +391,7 @@ class StudyActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        timer?.cancel()
         speaker?.shutdown()
         speaker = null
         super.onDestroy()
@@ -310,12 +400,28 @@ class StudyActivity : AppCompatActivity() {
     companion object {
         private const val EXTRA_LANG = "lang"
         private const val EXTRA_LESSON = "lesson"
+        private const val EXTRA_SOURCE = "source"
+        private const val EXTRA_TIMED = "timed"
         private const val REVIEW_MAX = 20
+        private const val TIMED_MS = 60_000L
+        const val SOURCE_FUNC = "func"
+        const val SOURCE_VOCAB = "vocab"
 
-        /** [lessonKey] null = review the cards due today. */
-        fun intent(context: Context, code: String, lessonKey: String?): Intent =
+        fun vocabStoreCode(code: String) = "v_$code"
+        fun bestKey(source: String, code: String) = "best_timed_${source}_$code"
+
+        /** [lessonKey] null = review the cards due today. [timed] = 60-second game. */
+        fun intent(
+            context: Context,
+            code: String,
+            lessonKey: String?,
+            source: String = SOURCE_FUNC,
+            timed: Boolean = false,
+        ): Intent =
             Intent(context, StudyActivity::class.java)
                 .putExtra(EXTRA_LANG, code)
                 .putExtra(EXTRA_LESSON, lessonKey)
+                .putExtra(EXTRA_SOURCE, source)
+                .putExtra(EXTRA_TIMED, timed)
     }
 }

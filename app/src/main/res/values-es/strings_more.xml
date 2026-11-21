@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_vocab">Vocabulario</string>
+    <string name="vocab_category">Tema</string>
+    <string name="vocab_search_hint">Busca en español, inglés o el idioma</string>
+    <string name="vocab_practice">Practicar este tema</string>
+    <string name="vocab_download_all">Descargar todo</string>
+    <string name="vocab_translating">Traduciendo este tema al %s…</string>
+    <string name="vocab_downloading_all">Descargando todo el vocabulario en %s para usarlo sin conexión…</string>
+    <string name="vocab_all_ready">Todo el vocabulario en %s está guardado en tu móvil.</string>
+    <string name="vocab_error">No se pudo traducir: %s</string>
+    <string name="vocab_hint">Toca una palabra para oírla; mantén pulsado para copiarla.</string>
+    <string name="vocab_not_ready">Abre el tema una vez con internet para guardar sus palabras y luego practica.</string>
+    <string name="daily_title">Palabra y frase del día</string>
+    <string name="random_title">Palabra al azar</string>
+    <string name="random_word">Otra</string>
+    <string name="add_to_review">Añadir a repaso</string>
+    <string name="added_to_review">Añadida: saldrá en el repaso de hoy.</string>
+    <string name="timed_title">Juego de 60 segundos</string>
+    <string name="timed_body">Todas las respuestas correctas que puedas en un minuto. Récord: %d</string>
+    <string name="timed_play">Jugar</string>
+    <string name="timed_score_live">Puntos: %d</string>
+    <string name="seconds_left">Quedan %d s</string>
+    <string name="time_up">¡Se acabó el tiempo!</string>
+    <plurals name="timed_score">
+        <item quantity="one">%d acierto en 60 segundos</item>
+        <item quantity="many">%d aciertos en 60 segundos</item>
+        <item quantity="other">%d aciertos en 60 segundos</item>
+    </plurals>
+    <string name="timed_best">Tu récord: %d</string>
+    <string name="new_record">¡Nuevo récord!</string>
+    <string name="play_again">Jugar otra vez</string>
+    <string name="pronunciation">Pronunciación: %s</string>
+    <string name="online_switch">Google Traductor online gratis (todos los idiomas + pronunciación)</string>
+    <string name="online_body">Con internet la app usa el servicio público de Google Traductor: incluye yoruba y zulú y muestra cómo se pronuncian el árabe, el japonés o el ruso en letras latinas. Sin internet, o si falla, usa los paquetes sin conexión de abajo.</string>
+</resources>

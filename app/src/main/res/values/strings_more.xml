@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_vocab">Vocabulary</string>
+    <string name="vocab_category">Theme</string>
+    <string name="vocab_search_hint">Search in Spanish, English or the language</string>
+    <string name="vocab_practice">Practice this theme</string>
+    <string name="vocab_download_all">Download all</string>
+    <string name="vocab_translating">Translating this theme into %s…</string>
+    <string name="vocab_downloading_all">Downloading all the vocabulary in %s for offline use…</string>
+    <string name="vocab_all_ready">All the %s vocabulary is saved on your phone.</string>
+    <string name="vocab_error">Couldn\'t translate: %s</string>
+    <string name="vocab_hint">Tap a word to hear it, hold to copy it.</string>
+    <string name="vocab_not_ready">Open the theme with internet once so its words are saved, then practise.</string>
+    <string name="daily_title">Word and sentence of the day</string>
+    <string name="random_title">Random word</string>
+    <string name="random_word">Another one</string>
+    <string name="add_to_review">Add to review</string>
+    <string name="added_to_review">Added: it will appear in today\'s review.</string>
+    <string name="timed_title">60-second game</string>
+    <string name="timed_body">As many right answers as you can in one minute. Record: %d</string>
+    <string name="timed_play">Play</string>
+    <string name="timed_score_live">Score: %d</string>
+    <string name="seconds_left">%d s left</string>
+    <string name="time_up">Time\'s up!</string>
+    <plurals name="timed_score">
+        <item quantity="one">%d right answer in 60 seconds</item>
+        <item quantity="other">%d right answers in 60 seconds</item>
+    </plurals>
+    <string name="timed_best">Your record: %d</string>
+    <string name="new_record">New record!</string>
+    <string name="play_again">Play again</string>
+    <string name="pronunciation">Pronunciation: %s</string>
+    <string name="online_switch">Free online Google Translate (all languages + pronunciation)</string>
+    <string name="online_body">With internet the app uses Google Translate\'s public service: it includes Yoruba and Zulu and shows how Arabic, Japanese or Russian are pronounced in Latin letters. Without internet, or if it fails, it uses the offline packs below.</string>
+</resources>

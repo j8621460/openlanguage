@@ -171,6 +171,7 @@ class TranslatorFragment : Fragment() {
         b.outputCard.isVisible = false
         b.output.text = ""
         b.status.isVisible = false
+        b.inputTranslit.isVisible = false
     }
 
     private fun translate(allowDownload: Boolean) {
@@ -193,6 +194,12 @@ class TranslatorFragment : Fragment() {
                 if (_b == null) return@launch
                 b.status.isVisible = false
                 b.output.text = result.text
+                val outTr = result.translit?.takeIf { it.isNotBlank() && it != result.text }
+                b.outputTranslit.text = outTr?.let { getString(R.string.pronunciation, it) }
+                b.outputTranslit.isVisible = outTr != null
+                val inTr = result.sourceTranslit?.takeIf { it.isNotBlank() && it != text }
+                b.inputTranslit.text = inTr?.let { getString(R.string.pronunciation, it) }
+                b.inputTranslit.isVisible = inTr != null
                 b.outputCard.isVisible = true
                 lastDetected = result.detectedSource ?: lastDetected
                 val detected = result.detectedSource?.let { Languages.byCode(it)?.english ?: it }

@@ -17,7 +17,14 @@ class TranslateException(message: String, val kind: Kind = Kind.OTHER) : Excepti
     enum class Kind { NO_KEY, BAD_KEY, FORBIDDEN, QUOTA, NETWORK, OTHER, UNSUPPORTED, DETECT, NEEDS_DOWNLOAD, DOWNLOAD }
 }
 
-data class Translation(val text: String, val detectedSource: String?)
+data class Translation(
+    val text: String,
+    val detectedSource: String?,
+    /** Latin-letter pronunciation of [text] (Arabic, Japanese, Russian…), when known. */
+    val translit: String? = null,
+    /** Latin-letter pronunciation of the input text, when known. */
+    val sourceTranslit: String? = null,
+)
 
 /**
  * Google Cloud Translation API (v2, "Basic").

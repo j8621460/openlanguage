@@ -23,6 +23,9 @@ object Languages {
         Lang("ga", "Irish", "Gaeilge", "ga-IE"),
         Lang("no", "Norwegian", "Norsk", "nb-NO"),
         Lang("yo", "Yoruba", "Yorùbá", "yo-NG"),
+        Lang("sw", "Swahili", "Kiswahili", "sw-KE"),
+        Lang("zu", "Zulu", "isiZulu", "zu-ZA"),
+        Lang("ja", "Japanese", "日本語", "ja-JP"),
     )
     val spanish = Lang("es", "Spanish", "Español", "es-ES")
     val english = Lang("en", "English", "English", "en-US")

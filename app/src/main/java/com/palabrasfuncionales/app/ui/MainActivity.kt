@@ -68,12 +68,13 @@ class MainActivity : AppCompatActivity() {
             R.id.nav_translator -> TAG_TRANSLATOR
             R.id.nav_settings -> TAG_SETTINGS
             R.id.nav_dictionary -> TAG_DICTIONARY
+            R.id.nav_vocab -> TAG_VOCAB
             else -> TAG_LEARN
         }
         val fm = supportFragmentManager
         fm.commit {
             setReorderingAllowed(true)
-            for (t in listOf(TAG_LEARN, TAG_DICTIONARY, TAG_TRANSLATOR, TAG_SETTINGS)) {
+            for (t in listOf(TAG_LEARN, TAG_DICTIONARY, TAG_VOCAB, TAG_TRANSLATOR, TAG_SETTINGS)) {
                 if (t != tag) fm.findFragmentByTag(t)?.let { hide(it) }
             }
             val existing = fm.findFragmentByTag(tag)
@@ -85,12 +86,14 @@ class MainActivity : AppCompatActivity() {
         TAG_TRANSLATOR -> TranslatorFragment()
         TAG_SETTINGS -> SettingsFragment()
         TAG_DICTIONARY -> DictionaryFragment()
+        TAG_VOCAB -> VocabularyFragment()
         else -> LearnFragment()
     }
 
     companion object {
         const val TAG_LEARN = "learn"
         const val TAG_DICTIONARY = "dictionary"
+        const val TAG_VOCAB = "vocab"
         const val TAG_TRANSLATOR = "translator"
         const val TAG_SETTINGS = "settings"
     }

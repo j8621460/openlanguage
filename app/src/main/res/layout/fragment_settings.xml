@@ -25,6 +25,20 @@
             android:textColor="?attr/colorOnSurfaceVariant" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/onlineSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/online_switch" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/online_body"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textColor="?attr/colorOnSurfaceVariant" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/wifiOnly"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

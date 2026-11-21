@@ -19,6 +19,11 @@ import com.palabrasfuncionales.app.learn.Lessons
 import com.palabrasfuncionales.app.learn.Srs
 import com.palabrasfuncionales.app.learn.SrsStore
 import com.palabrasfuncionales.app.learn.Streak
+import com.palabrasfuncionales.app.learn.CardState
+import com.palabrasfuncionales.app.data.Entry
+import com.palabrasfuncionales.app.util.Speaker
+import com.palabrasfuncionales.app.util.toast
+import kotlin.random.Random
 import kotlinx.coroutines.launch
 
 /** Home of the learning mode: method, tip of the day, review and the lesson path. */
@@ -29,6 +34,8 @@ class LearnFragment : Fragment() {
     private var lessons: List<Lesson> = emptyList()
     private var nextLesson: Lesson? = null
     private var tipIndex = 0
+    private var daily: Entry? = null
+    private var speaker: Speaker? = null
     private val adapter = LessonAdapter { lesson -> open(lesson.key) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, s: Bundle?): View {
@@ -51,6 +58,21 @@ class LearnFragment : Fragment() {
         }
         b.continueLesson.setOnClickListener { nextLesson?.let { open(it.key) } }
         b.review.setOnClickListener { open(null) }
+        speaker = Speaker(requireContext())
+        b.dailyRandom.setOnClickListener { pickDaily(random = true) }
+        b.dailyListen.setOnClickListener {
+            val p = pack ?: return@setOnClickListener
+            daily?.let { e ->
+                speaker?.speak(e.example ?: e.word, p.lang.ttsTag) { ok ->
+                    if (!ok) context?.let { it.toast(it.getString(R.string.no_voice, p.lang.english)) }
+                }
+            }
+        }
+        b.dailyAdd.setOnClickListener { addDailyToReview() }
+        b.timedPlay.setOnClickListener {
+            val p = pack ?: return@setOnClickListener
+            startActivity(StudyActivity.intent(requireContext(), p.lang.code, null, timed = true))
+        }
 
         val ui = prefs()
         val saved = ui.getString(KEY_LANG, null) ?: ui.getString("dictionary_language", null)
@@ -81,6 +103,7 @@ class LearnFragment : Fragment() {
             if (_b == null) return@launch
             pack = p
             lessons = Lessons.build(p)
+            pickDaily(random = false)
             refresh()
         }
     }
@@ -108,6 +131,11 @@ class LearnFragment : Fragment() {
         }
         binding.allDone.isVisible = nextLesson == null
 
+        val best = requireContext().getSharedPreferences("stats", Context.MODE_PRIVATE)
+            .getInt(StudyActivity.bestKey(StudyActivity.SOURCE_FUNC, p.lang.code), 0)
+        binding.timedBest.text = getString(R.string.timed_body, best)
+        binding.dailyAdd.isEnabled = daily?.let { !states.containsKey(it.cardKey) } ?: false
+
         adapter.submitList(lessons.map { l ->
             LessonRow(
                 lesson = l,
@@ -118,6 +146,37 @@ class LearnFragment : Fragment() {
         })
     }
 
+    /** Same word all day (seeded by date), or a random one on demand. Prefers entries with an example sentence. */
+    private fun pickDaily(random: Boolean) {
+        val p = pack ?: return
+        val pool = p.entries.filter { !it.example.isNullOrBlank() || !it.exampleTranslit.isNullOrBlank() }
+            .ifEmpty { p.entries }
+        if (pool.isEmpty()) return
+        val r = if (random) Random.Default else Random(Srs.today() * 31 + p.lang.code.hashCode())
+        val e = pool[r.nextInt(pool.size)]
+        daily = e
+        b.dailyLabel.setText(if (random) R.string.random_title else R.string.daily_title)
+        b.dailyWord.text = e.word
+        b.dailyReading.text = e.readingAid
+        b.dailyReading.isVisible = !e.readingAid.isNullOrBlank()
+        b.dailyMeaning.text = e.spanish
+        val ex = listOfNotNull(e.example, e.exampleTranslit?.let { if (e.example != null) "($it)" else it }).joinToString("  ")
+        b.dailyExample.text = ex
+        b.dailyExample.isVisible = ex.isNotBlank()
+        b.dailyExampleEs.text = e.exampleSpanish
+        b.dailyExampleEs.isVisible = !e.exampleSpanish.isNullOrBlank()
+        val states = SrsStore(requireContext(), p.lang.code).all()
+        b.dailyAdd.isEnabled = !states.containsKey(e.cardKey)
+    }
+
+    private fun addDailyToReview() {
+        val p = pack ?: return
+        val e = daily ?: return
+        SrsStore(requireContext(), p.lang.code).putAll(mapOf(e.cardKey to CardState(1, Srs.today())))
+        requireContext().toast(R.string.added_to_review)
+        refresh()
+    }
+
     private fun open(lessonKey: String?) {
         val p = pack ?: return
         startActivity(StudyActivity.intent(requireContext(), p.lang.code, lessonKey))
@@ -126,6 +185,8 @@ class LearnFragment : Fragment() {
     private fun prefs() = requireContext().getSharedPreferences("ui", Context.MODE_PRIVATE)
 
     override fun onDestroyView() {
+        speaker?.shutdown()
+        speaker = null
         b.lessons.adapter = null
         _b = null
         super.onDestroyView()

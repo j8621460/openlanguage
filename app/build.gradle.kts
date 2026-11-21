@@ -97,4 +97,6 @@ dependencies {
     implementation(libs.mlkit.translate)
     implementation(libs.mlkit.language.id)
     testImplementation(libs.junit)
+    // Real org.json for JVM unit tests (Android's copy is only a stub there).
+    testImplementation(libs.org.json)
 }

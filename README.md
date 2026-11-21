@@ -5,14 +5,19 @@
 back at the end, then spaced repetition (Leitner: 1, 2, 4, 8, 16 days) with a
 daily review, streak, tip of the day and a 10-minute daily method.
 
-Offline dictionary of the A1–B1 function words from the ten guides
+**Word and sentence of the day** (with "another one" for random words), a
+**60-second game** with records, and a **Vocabulary** tab: ~400 everyday words
+in 20 themes (family, food, body, verbs…) translated into each language with
+pronunciation, saved on the phone after the first time, with practice lessons.
+
+Offline dictionary of the A1–B1 function words from the thirteen guides
 (German, French, Italian, Portuguese, Dutch, Russian, Arabic, Irish, Norwegian,
-Yoruba → Spanish): **3,042 entries** with Spanish meaning, examples, "watch out" notes and chapter
+Yoruba, Swahili, Zulu, Japanese → Spanish): **3,834 entries** with Spanish meaning, examples, "watch out" notes and chapter
 filter. Each entry can show its **English** meaning, and the **Translator** tab
 is a mini Google Translate (type or speak, translation appears as you type,
 listen, copy) between English, Spanish and the 8 languages.
 
-Translation is **free and needs no API key** (Yoruba: offline packs don't include it, so it opens Google Translate): it uses **Google ML Kit**
+Translation is **free and needs no API key**: with internet it uses Google Translate's public endpoint (all 15 languages, including Yoruba and Zulu, plus Latin-letter pronunciation of Arabic, Japanese, Russian); without internet: it uses **Google ML Kit**
 on-device translation. Each language pack (~30 MB) downloads once from Google
 (manage them in Settings); after that it works offline and your text never
 leaves the phone. A Google Cloud API key is optional.

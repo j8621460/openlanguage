@@ -16,6 +16,7 @@ import com.palabrasfuncionales.app.data.Languages
 import com.palabrasfuncionales.app.databinding.FragmentSettingsBinding
 import com.palabrasfuncionales.app.databinding.ItemOfflineLangBinding
 import com.palabrasfuncionales.app.net.OfflineTranslator
+import com.palabrasfuncionales.app.net.TranslationService
 import com.palabrasfuncionales.app.net.GoogleTranslator
 import com.palabrasfuncionales.app.net.TranslateException
 import com.palabrasfuncionales.app.security.AppSignature
@@ -71,6 +72,10 @@ class SettingsFragment : Fragment() {
         b.version.text = getString(R.string.version_text, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
 
         val ui = requireContext().getSharedPreferences("ui", Context.MODE_PRIVATE)
+        b.onlineSwitch.isChecked = ui.getBoolean(TranslationService.KEY_ONLINE, true)
+        b.onlineSwitch.setOnCheckedChangeListener { _, checked ->
+            ui.edit().putBoolean(TranslationService.KEY_ONLINE, checked).apply()
+        }
         b.wifiOnly.isChecked = ui.getBoolean(OfflineTranslator.KEY_WIFI_ONLY, false)
         b.wifiOnly.setOnCheckedChangeListener { _, checked ->
             ui.edit().putBoolean(OfflineTranslator.KEY_WIFI_ONLY, checked).apply()

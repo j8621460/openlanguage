@@ -3,12 +3,14 @@ empty spacer columns; words carry a pronunciation column."""
 import pdfplumber, re, json, sys, os, unicodedata
 from collections import OrderedDict
 PDF_DIR=os.environ.get('PDF_DIR','pdfs'); OUT_DIR=os.environ.get('OUT_DIR','app/src/main/assets/dict')
-LANGS={'no':('noruego','Noruego','Norwegian','Norsk','nb-NO'),'yo':('yoruba','Yoruba','Yoruba','Yorùbá','yo-NG')}
+LANGS={'no':('noruego','Noruego','Norwegian','Norsk','nb-NO'),'yo':('yoruba','Yoruba','Yoruba','Yorùbá','yo-NG'),
+       'sw':('suajili','Suajili','Swahili','Kiswahili','sw-KE'),'zu':('zulú','Zulú','Zulu','isiZulu','zu-ZA'),'ja':('japonés','Japonés','Japanese','日本語','ja-JP')}
 HEAD=re.compile(r'^(\d{1,2})\.\s+([A-ZÁÉÍÓÚ¿][^(]*)')
+NORM='NFC'
 def clean(s):
-    s=unicodedata.normalize('NFC',(s or '').replace('\n',' '))
+    s=unicodedata.normalize(NORM,(s or '').replace('\n',' '))
     return re.sub(r'\s+',' ',s).strip()
-COLMAP={'Pron.':'pron','Pronunciación':'pron','Español':'es','Ejemplo':'ex','Traducción':'exEs'}
+COLMAP={'Pron.':'pron','Pronunciación':'pron','Español':'es','Función':'es','Ejemplo':'ex','Traducción':'exEs','Lectura [pron.]':'lect','Lectura':'lect'}
 def br(x):
     m=re.match(r'^(.*?)\s*\[(.*)\]$', x or '')
     return (m.group(1).strip(), m.group(2).strip()) if m else ((x or '').strip(), '')
@@ -30,13 +32,17 @@ def special(cols, r, rows, sec):
         w,p=br(vals[i])
         if w: rows.append(dict(w=w,pron=p,es=f"posesivo de «{vals[0]}» (mi, tu, su…)",ex=vals[i+1],exEs=vals[i+2],sec=sec))
 def run(code):
+    global NORM
     slug,lname,en,native,tts=LANGS[code]
+    NORM='NFKC' if code=='ja' else 'NFC'
+    import glob as _g, unicodedata as _u
+    pdf_path=[p for p in _g.glob(PDF_DIR+'/Las_palabras_funcionales_del_*.pdf') if _u.normalize('NFC',p).endswith(_u.normalize('NFC',f'del_{slug}.pdf'))][0]
     rows=[]; state={'sec':'Introducción','num':-1}
     def set_sec(m):
         n=int(m.group(1))
         if n>=state['num']:
             state['num']=n; state['sec']=f"{n}. {m.group(2).strip()}"
-    with pdfplumber.open(f'{PDF_DIR}/Las_palabras_funcionales_del_{slug}.pdf') as pdf:
+    with pdfplumber.open(pdf_path) as pdf:
         cols=None
         for pi,p in enumerate(pdf.pages):
             lines=[l for l in p.extract_text_lines() if l['chars'][0]['size']>14]
@@ -57,7 +63,7 @@ def run(code):
                 first_table=False
                 for raw in data:
                     r=[clean(x) for x in raw]
-                    if lname in r and 'Español' in r:
+                    if lname in r and ('Español' in r or 'Función' in r):
                         cols=r; continue
                     if ('Sujeto' in r and 'Objeto' in r) or ('Corto' in r and 'Enfático' in r) or ('Persona' in r and 'Posesivo' in r):
                         cols=r; continue
@@ -76,6 +82,13 @@ def run(code):
                         elif h in COLMAP: idx.setdefault(COLMAP[h],i)
                     e={k:r[i] for k,i in idx.items() if i<len(r) and r[i]}
                     if not e.get('w') or not e.get('es') or len(e['w'])>60: continue
+                    if e.get('lect'):
+                        m=re.match(r'^(.*?)\s*\[(.*)\]\s*$', e.pop('lect'))
+                        if m: e['tr']=m.group(1).strip(); e['pron']=m.group(2).strip()
+                        else: e['tr']=re.sub(r'\s*\[.*$','',r[idx['lect']]).strip()
+                    if e.get('ex'):
+                        m=re.match(r'^(.*?)\s*\(([A-Za-zāēīōūÀ-ÿ\-\'’ ,.?!…~/]+)\)\s*$', e['ex'])
+                        if m and re.search(r'[\u3040-\u30ff\u4e00-\u9fff]', m.group(1)): e['ex']=m.group(1).strip(); e['exTr']=m.group(2).strip()
                     if e.get('pron'): e['pron']=re.sub(r'-\s+','-',e['pron'].strip('[]').strip())
                     e['sec']=state['sec']
                     rows.append(e)

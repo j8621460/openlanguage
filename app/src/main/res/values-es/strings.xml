@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="process_text_label">Traducir con Palabras</string>
-    <string name="nav_dictionary">Diccionario</string>
+    <string name="nav_dictionary">Funcionales</string>
     <string name="nav_translator">Traductor</string>
     <string name="nav_settings">Ajustes</string>
     <string name="language">Idioma</string>
@@ -63,7 +63,7 @@
     <string name="about_title">Acerca de</string>
     <string name="about_body">Palabras funcionales (artículos, preposiciones, pronombres, conjunciones, pequeños adverbios) para estudiantes de A1 a B1, con significado en español, ejemplos y las trampas típicas de los hispanohablantes. Alemán, francés, italiano, portugués, neerlandés, ruso, árabe e irlandés.</string>
     <string name="version_text">Versión %1$s (%2$d)</string>
-    <string name="offline_title">Traducción gratis sin conexión</string>
+    <string name="offline_title">Traducción gratis</string>
     <string name="offline_body">La traducción se hace en tu móvil con Google ML Kit: gratis, sin cuenta y sin clave de API. Cada paquete de idioma (unos 30 MB) se descarga una vez desde Google; después funciona sin internet y tu texto no sale del móvil.</string>
     <string name="wifi_only">Descargar idiomas solo con wifi</string>
     <string name="pack_ready">En este móvil</string>
@@ -75,7 +75,7 @@
     <string name="speak">Hablar</string>
     <string name="speak_now">Habla ahora</string>
     <string name="no_speech_input">No hay app de reconocimiento de voz en este móvil.</string>
-    <string name="offline_hint">Traducido en tu móvil con Google ML Kit. La primera vez que usas un idioma se descarga un paquete gratis de unos 30 MB.</string>
+    <string name="offline_hint">Con internet: Google Traductor gratis, todos los idiomas y con pronunciación. Sin internet: paquetes de Google ML Kit en tu móvil (unos 30 MB por idioma, se descargan una vez).</string>
     <string name="tap_translate_to_download">Pulsa Traducir para descargar el paquete del idioma (una vez, unos 30 MB).</string>
     <string name="downloading_packs">Descargando %s (una vez, unos 30 MB cada uno)…</string>
     <string name="err_unsupported">La traducción sin conexión no incluye este idioma (%s). Usa «Abrir en Google Traductor».</string>
