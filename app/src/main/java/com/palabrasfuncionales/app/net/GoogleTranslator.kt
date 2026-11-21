@@ -24,6 +24,8 @@ data class Translation(
     val translit: String? = null,
     /** Latin-letter pronunciation of the input text, when known. */
     val sourceTranslit: String? = null,
+    /** True when [translit] is the offline approximation (Arabic has no vowels written). */
+    val translitApprox: Boolean = false,
 )
 
 /**

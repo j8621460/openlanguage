@@ -33,4 +33,5 @@
     <string name="pronunciation">Pronunciación: %s</string>
     <string name="online_switch">Google Traductor online gratis (todos los idiomas + pronunciación)</string>
     <string name="online_body">Con internet la app usa el servicio público de Google Traductor: incluye yoruba y zulú y muestra cómo se pronuncian el árabe, el japonés o el ruso en letras latinas. Sin internet, o si falla, usa los paquetes sin conexión de abajo.</string>
+    <string name="pronunciation_approx">Pronunciación (aprox., sin conexión): %s</string>
 </resources>

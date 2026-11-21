@@ -2,6 +2,7 @@ package com.palabrasfuncionales.app.net
 
 import android.content.Context
 import com.palabrasfuncionales.app.security.SecureStore
+import com.palabrasfuncionales.app.util.Romanizer
 
 /**
  * One entry point for translation:
@@ -25,7 +26,7 @@ object TranslationService {
     ): Translation {
         val q = text.take(GoogleTranslator.MAX_INPUT_CHARS)
         val key = SecureStore(context).getApiKey()
-        if (!key.isNullOrBlank()) return GoogleTranslator.translate(context, key, q, source, target)
+        if (!key.isNullOrBlank()) return withReading(GoogleTranslator.translate(context, key, q, source, target), q, source, target)
 
         val offlinePossible = OfflineTranslator.isSupported(target) &&
             (source == null || OfflineTranslator.isSupported(source))
@@ -36,6 +37,22 @@ object TranslationService {
                 if (!offlinePossible) throw e // e.g. Yoruba/Zulu with no connection
             }
         }
-        return OfflineTranslator.translate(context, q, source, target, allowDownload, onDownloading)
+        return withReading(OfflineTranslator.translate(context, q, source, target, allowDownload, onDownloading), q, source, target)
+    }
+
+    /**
+     * Offline there is no pronunciation from Google, so Arabic, Russian and
+     * Japanese kana get an approximate one from [Romanizer] (marked «aprox.»).
+     */
+    private fun withReading(t: Translation, input: String, source: String?, target: String): Translation {
+        var r = t
+        if (r.translit.isNullOrBlank() && Romanizer.needsRomanization(target)) {
+            Romanizer.romanize(r.text, target)?.let { r = r.copy(translit = it, translitApprox = true) }
+        }
+        val src = source ?: r.detectedSource
+        if (r.sourceTranslit.isNullOrBlank() && src != null && Romanizer.needsRomanization(src)) {
+            Romanizer.romanize(input, src)?.let { r = r.copy(sourceTranslit = it) }
+        }
+        return r
     }
 }

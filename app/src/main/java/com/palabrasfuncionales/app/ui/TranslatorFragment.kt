@@ -195,7 +195,7 @@ class TranslatorFragment : Fragment() {
                 b.status.isVisible = false
                 b.output.text = result.text
                 val outTr = result.translit?.takeIf { it.isNotBlank() && it != result.text }
-                b.outputTranslit.text = outTr?.let { getString(R.string.pronunciation, it) }
+                b.outputTranslit.text = outTr?.let { getString(if (result.translitApprox) R.string.pronunciation_approx else R.string.pronunciation, it) }
                 b.outputTranslit.isVisible = outTr != null
                 val inTr = result.sourceTranslit?.takeIf { it.isNotBlank() && it != text }
                 b.inputTranslit.text = inTr?.let { getString(R.string.pronunciation, it) }

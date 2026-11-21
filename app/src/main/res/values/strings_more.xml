@@ -32,4 +32,5 @@
     <string name="pronunciation">Pronunciation: %s</string>
     <string name="online_switch">Free online Google Translate (all languages + pronunciation)</string>
     <string name="online_body">With internet the app uses Google Translate\'s public service: it includes Yoruba and Zulu and shows how Arabic, Japanese or Russian are pronounced in Latin letters. Without internet, or if it fails, it uses the offline packs below.</string>
+    <string name="pronunciation_approx">Pronunciation (approx., offline): %s</string>
 </resources>
