@@ -1,7 +1,7 @@
 # Versions are pinned and were all at least several weeks old when chosen.
 # Dependabot (.github/dependabot.yml) proposes updates as pull requests.
 [versions]
-agp = "8.10.1"
+agp = "9.5.1"
 kotlin = "2.1.21"
 coreKtx = "1.13.1"
 appcompat = "1.7.0"
