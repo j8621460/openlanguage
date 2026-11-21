@@ -204,6 +204,9 @@ class TranslatorFragment : Fragment() {
                     // Live mode never downloads; tell the user one tap is needed.
                     b.status.text = getString(R.string.tap_translate_to_download)
                     b.status.isVisible = true
+                } else if (e.kind == TranslateException.Kind.UNSUPPORTED) {
+                    b.status.text = TranslateErrors.message(ctx, e)
+                    b.status.isVisible = true
                 } else if (allowDownload) {
                     b.status.isVisible = false
                     ctx.toast(TranslateErrors.message(ctx, e))

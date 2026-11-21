@@ -78,8 +78,12 @@ class EntrySheet : BottomSheetDialogFragment() {
             try {
                 // The Spanish meaning is more precise than the bare function word.
                 val meaning = TranslationService.translate(ctx, e.spanish, "es", "en", onDownloading = onDownloading)
-                val example = e.example?.let { TranslationService.translate(ctx, it, lang.code, "en", onDownloading = onDownloading) }
-                    ?: e.exampleSpanish?.let { TranslationService.translate(ctx, it, "es", "en") }
+                // Offline packs don't cover every language (e.g. Yoruba): then use the Spanish example.
+                val example = try {
+                    e.example?.let { TranslationService.translate(ctx, it, lang.code, "en", onDownloading = onDownloading) }
+                } catch (ex: TranslateException) {
+                    null
+                } ?: e.exampleSpanish?.let { TranslationService.translate(ctx, it, "es", "en") }
                 if (_b == null) return@launch
                 b.englishMeaning.text = meaning.text
                 b.englishMeaning.isVisible = true

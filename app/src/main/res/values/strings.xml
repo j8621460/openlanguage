@@ -89,7 +89,7 @@
     <string name="offline_hint">Translated on your phone by Google ML Kit. The first time you use a language it downloads a free pack of about 30 MB.</string>
     <string name="tap_translate_to_download">Tap Translate to download the language pack (once, about 30 MB).</string>
     <string name="downloading_packs">Downloading %s (once, about 30 MB each)…</string>
-    <string name="err_unsupported">Offline translation doesn\'t support this language (%s).</string>
+    <string name="err_unsupported">Offline translation doesn\'t include this language (%s). Use «Open in Google Translate».</string>
     <string name="err_detect">Couldn\'t tell the language. Choose it in From.</string>
     <string name="err_needs_download">The language pack isn\'t downloaded yet.</string>
     <string name="err_download">The language pack couldn\'t download. Check your connection (or the Wi-Fi-only setting).</string>

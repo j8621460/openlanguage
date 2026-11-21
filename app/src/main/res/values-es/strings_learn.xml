@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_learn">Aprender</string>
+    <string name="learn_title">Aprende %s parte por parte</string>
+    <string name="streak_days">Racha: %d días seguidos</string>
+    <string name="learned_count">%1$d de %2$d palabras vistas, %3$d dominadas</string>
+    <plurals name="due_today">
+        <item quantity="one">%d tarjeta para repasar hoy</item>
+        <item quantity="many">%d tarjetas para repasar hoy</item>
+        <item quantity="other">%d tarjetas para repasar hoy</item>
+    </plurals>
+    <string name="review_now">Repasar ahora (%d)</string>
+    <string name="continue_lesson">Seguir: %1$s, parte %2$d de %3$d</string>
+    <string name="all_lessons_done">Ya has visto todas las lecciones. Sigue repasando cada día hasta dominarlas todas.</string>
+    <string name="tip_title">Truco para aprender más rápido</string>
+    <string name="another_tip">Otro truco</string>
+    <string name="method_title">El método de 10 minutos al día</string>
+    <string name="method_body">1. Primero repasa: las tarjetas que tocan hoy (2–4 min).\n2. Una lección nueva: 8 palabras (5 min).\n3. Di en voz alta cada palabra y cada ejemplo.\n4. Escribe una frase tuya con una palabra nueva.\n5. Siempre a la misma hora. Poco y cada día rinde más que mucho una vez por semana.</string>
+    <string name="lessons_title">Lecciones en el orden del libro</string>
+    <string name="lesson_part">Parte %1$d de %2$d, %3$d palabras</string>
+    <string name="lesson_mastered">Dominada</string>
+    <string name="lesson_new">Nueva</string>
+    <string name="lesson_seen">%1$d/%2$d vistas</string>
+    <string name="next_badge">SIGUIENTE</string>
+    <string name="close">Cerrar</string>
+    <string name="review_title">Repaso de %s</string>
+    <string name="nothing_due">Hoy no hay nada que repasar. ¡Haz una lección nueva!</string>
+    <string name="lesson_title">%1$s, %2$d/%3$d</string>
+    <string name="step_learn">Aprende %1$d de %2$d</string>
+    <string name="step_practice">Practica %1$d de %2$d</string>
+    <string name="card_hint">Escucha, dilo en voz alta, intenta adivinar el significado y luego gira la tarjeta.</string>
+    <string name="show_meaning">Ver significado</string>
+    <string name="next">Siguiente</string>
+    <string name="start_practice">Empezar a practicar</string>
+    <string name="ask_forward">¿Qué significa?</string>
+    <string name="ask_reverse">¿Cómo se dice en %s?</string>
+    <string name="was_answer">Casi. Era: %s</string>
+    <string name="see_result">Ver resultado</string>
+    <string name="result_great">¡Excelente!</string>
+    <string name="result_good">¡Bien hecho!</string>
+    <string name="result_keep_going">Buen trabajo: los errores también enseñan</string>
+    <string name="result_score">%1$d de %2$d acertadas a la primera (%3$d%%)</string>
+    <plurals name="next_review_in">
+        <item quantity="one">Estas palabras vuelven a repaso en %d día. Repasar justo antes de olvidar es lo que las fija.</item>
+        <item quantity="many">Estas palabras vuelven a repaso en %d días. Repasar justo antes de olvidar es lo que las fija.</item>
+        <item quantity="other">Estas palabras vuelven a repaso en %d días. Repasar justo antes de olvidar es lo que las fija.</item>
+    </plurals>
+    <string name="next_lesson">Siguiente lección</string>
+    <string name="repeat_lesson">Repetir esta lección</string>
+    <string name="done">Terminar</string>
+    <string-array name="praise">
+        <item>¡Correcto!</item>
+        <item>¡Exacto!</item>
+        <item>¡Muy bien!</item>
+        <item>¡Perfecto!</item>
+        <item>¡Eso es!</item>
+    </string-array>
+    <string-array name="learning_tips">
+        <item>Repetición espaciada: repasa justo antes de olvidar. La app programa cada palabra por ti: a 1, 2, 4, 8 y 16 días.</item>
+        <item>Recuerdo activo: intenta responder antes de mirar. El esfuerzo de recordar fija mucho más que releer.</item>
+        <item>Poco y a menudo: 10–15 minutos cada día rinden más que 2 horas el domingo. El cerebro consolida entre sesión y sesión.</item>
+        <item>Trocea: la memoria de trabajo aguanta unas 7 cosas, por eso cada lección tiene 8 palabras. Termina una y descansa.</item>
+        <item>Dilo en voz alta: oírte y mover la boca añade otra vía a la memoria. Pulsa Escuchar e imita el ritmo.</item>
+        <item>Mnemotecnia: une la palabra a una imagen absurda en español. Alemán «aber» (pero) → «a ver, pero…». Cuanto más rara la imagen, mejor se queda.</item>
+        <item>Frases, no palabras sueltas: las palabras funcionales solo tienen sentido dentro de una frase. Repite el ejemplo entero.</item>
+        <item>Hazla tuya: escribe una frase sobre tu vida con cada palabra nueva. Lo personal se recuerda más.</item>
+        <item>Duerme encima: mientras duermes, el cerebro repasa y guarda lo aprendido. Un repaso corto antes de dormir funciona muy bien.</item>
+        <item>Mezcla: en los repasos se mezclan capítulos. Alternar temas cuesta más en el momento, pero se retiene mejor.</item>
+        <item>Los errores ayudan: equivocarte y ver enseguida la respuesta correcta enseña más que un acierto fácil.</item>
+        <item>Enséñalo: explica una regla en voz alta, como a un amigo. Donde te atasques, ahí está lo que tienes que repasar.</item>
+        <item>Primero los falsos amigos: las notas amarillas «Ojo» son los errores típicos del hispanohablante.</item>
+        <item>Muévete: un paseo corto o algo de ejercicio antes de estudiar mejora la atención y la memoria.</item>
+        <item>No rompas la cadena: aunque sean 5 minutos, mantienen la racha y el hábito.</item>
+        <item>Bloques de concentración: 20 minutos con el móvil en silencio y 5 de descanso. Hacer varias cosas a la vez arruina la memoria.</item>
+        <item>Tapa y repite: lee el ejemplo, tápalo, dilo de memoria y comprueba.</item>
+        <item>Contexto real: pon una app en ese idioma o mira una serie con subtítulos en él.</item>
+    </string-array>
+</resources>

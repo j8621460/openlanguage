@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_learn">Learn</string>
+    <string name="learn_title">Learn %s, step by step</string>
+    <string name="streak_days">Streak: %d days in a row</string>
+    <string name="learned_count">%1$d of %2$d words seen, %3$d mastered</string>
+    <plurals name="due_today">
+        <item quantity="one">%d card to review today</item>
+        <item quantity="other">%d cards to review today</item>
+    </plurals>
+    <string name="review_now">Review now (%d)</string>
+    <string name="continue_lesson">Continue: %1$s, part %2$d of %3$d</string>
+    <string name="all_lessons_done">You have seen every lesson. Keep reviewing daily until they are all mastered.</string>
+    <string name="tip_title">Tip to learn faster</string>
+    <string name="another_tip">Another tip</string>
+    <string name="method_title">The 10-minute daily method</string>
+    <string name="method_body">1. Review first: the cards due today (2–4 min).\n2. One new lesson: 8 words (5 min).\n3. Say every word and example out loud.\n4. Write one sentence of your own with a new word.\n5. Same time every day. Short and daily beats long and weekly.</string>
+    <string name="lessons_title">Lessons in book order</string>
+    <string name="lesson_part">Part %1$d of %2$d, %3$d words</string>
+    <string name="lesson_mastered">Mastered</string>
+    <string name="lesson_new">New</string>
+    <string name="lesson_seen">%1$d/%2$d seen</string>
+    <string name="next_badge">NEXT</string>
+    <string name="close">Close</string>
+    <string name="review_title">Review %s</string>
+    <string name="nothing_due">Nothing to review today. Do a new lesson!</string>
+    <string name="lesson_title">%1$s, %2$d/%3$d</string>
+    <string name="step_learn">Learn %1$d of %2$d</string>
+    <string name="step_practice">Practice %1$d of %2$d</string>
+    <string name="card_hint">Listen, say it out loud, try to guess the meaning, then flip the card.</string>
+    <string name="show_meaning">Show meaning</string>
+    <string name="next">Next</string>
+    <string name="start_practice">Start practice</string>
+    <string name="ask_forward">What does it mean?</string>
+    <string name="ask_reverse">How do you say it in %s?</string>
+    <string name="was_answer">Not quite. It was: %s</string>
+    <string name="see_result">See result</string>
+    <string name="result_great">Excellent!</string>
+    <string name="result_good">Well done!</string>
+    <string name="result_keep_going">Good work, mistakes help you learn</string>
+    <string name="result_score">%1$d of %2$d right first time (%3$d%%)</string>
+    <plurals name="next_review_in">
+        <item quantity="one">These words come back for review in %d day. Reviewing right before you forget is what fixes them.</item>
+        <item quantity="other">These words come back for review in %d days. Reviewing right before you forget is what fixes them.</item>
+    </plurals>
+    <string name="next_lesson">Next lesson</string>
+    <string name="repeat_lesson">Repeat this lesson</string>
+    <string name="done">Done</string>
+    <string-array name="praise">
+        <item>Right!</item>
+        <item>Exactly!</item>
+        <item>Well done!</item>
+        <item>Perfect!</item>
+        <item>That\'s it!</item>
+    </string-array>
+    <string-array name="learning_tips">
+        <item>Spaced repetition: review just before you would forget. The app schedules each word for you: 1, 2, 4, 8 and 16 days.</item>
+        <item>Active recall: try to answer before you look. The effort of remembering builds memory far more than rereading.</item>
+        <item>Little and often: 10–15 minutes every day beats 2 hours on Sunday. Your brain consolidates between sessions.</item>
+        <item>Chunking: your working memory holds about 7 items, so lessons have 8 words. Finish one, then rest.</item>
+        <item>Say it out loud: hearing yourself and moving your mouth adds another memory path. Press Listen and imitate the rhythm.</item>
+        <item>Mnemonics: link the word to a silly image in Spanish. German «aber» (but) → «a ver, pero…». The stranger the image, the better it sticks.</item>
+        <item>Sentences, not loose words: function words only make sense inside a sentence. Repeat the whole example.</item>
+        <item>Make it yours: write one sentence about your own life with each new word. Personal memories last longer.</item>
+        <item>Sleep on it: your brain replays and stores what you learned while you sleep. A short review before bed works very well.</item>
+        <item>Mix it up: when you review, chapters are mixed. Alternating topics (interleaving) is harder in the moment but sticks better.</item>
+        <item>Mistakes help: getting it wrong and seeing the right answer at once teaches more than an easy right answer.</item>
+        <item>Teach it: explain a rule out loud, as if to a friend. Wherever you get stuck is what to review.</item>
+        <item>Watch for false friends first: the amber «Watch out» notes are the typical mistakes of Spanish speakers.</item>
+        <item>Move: a short walk or some exercise before studying improves attention and memory.</item>
+        <item>Don\'t break the chain: even 5 minutes keeps your streak and the habit alive.</item>
+        <item>Focus blocks: 20 minutes with the phone on silent, then 5 minutes of rest. Multitasking ruins memory.</item>
+        <item>Cover and say: read the example, cover it, say it from memory, then check.</item>
+        <item>Real context: change one app to the language, or watch a series with subtitles in it.</item>
+    </string-array>
+</resources>

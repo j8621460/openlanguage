@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             true
         }
         if (savedInstanceState == null) {
-            binding.bottomNav.selectedItemId = R.id.nav_dictionary
+            binding.bottomNav.selectedItemId = R.id.nav_learn
         }
         handleIncoming(intent)
     }
@@ -67,12 +67,13 @@ class MainActivity : AppCompatActivity() {
         val tag = when (itemId) {
             R.id.nav_translator -> TAG_TRANSLATOR
             R.id.nav_settings -> TAG_SETTINGS
-            else -> TAG_DICTIONARY
+            R.id.nav_dictionary -> TAG_DICTIONARY
+            else -> TAG_LEARN
         }
         val fm = supportFragmentManager
         fm.commit {
             setReorderingAllowed(true)
-            for (t in listOf(TAG_DICTIONARY, TAG_TRANSLATOR, TAG_SETTINGS)) {
+            for (t in listOf(TAG_LEARN, TAG_DICTIONARY, TAG_TRANSLATOR, TAG_SETTINGS)) {
                 if (t != tag) fm.findFragmentByTag(t)?.let { hide(it) }
             }
             val existing = fm.findFragmentByTag(tag)
@@ -83,10 +84,12 @@ class MainActivity : AppCompatActivity() {
     private fun create(tag: String): Fragment = when (tag) {
         TAG_TRANSLATOR -> TranslatorFragment()
         TAG_SETTINGS -> SettingsFragment()
-        else -> DictionaryFragment()
+        TAG_DICTIONARY -> DictionaryFragment()
+        else -> LearnFragment()
     }
 
     companion object {
+        const val TAG_LEARN = "learn"
         const val TAG_DICTIONARY = "dictionary"
         const val TAG_TRANSLATOR = "translator"
         const val TAG_SETTINGS = "settings"

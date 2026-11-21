@@ -24,8 +24,8 @@ class EntryAdapter(private val onClick: (Entry) -> Unit) :
         val e = getItem(position)
         with(holder.b) {
             word.text = e.word
-            translit.text = e.translit
-            translit.isVisible = !e.translit.isNullOrBlank()
+            translit.text = e.readingAid
+            translit.isVisible = !e.readingAid.isNullOrBlank()
             meaning.text = e.spanish
             section.text = e.section
             section.isVisible = showSection

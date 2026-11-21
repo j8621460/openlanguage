@@ -78,7 +78,7 @@
     <string name="offline_hint">Traducido en tu móvil con Google ML Kit. La primera vez que usas un idioma se descarga un paquete gratis de unos 30 MB.</string>
     <string name="tap_translate_to_download">Pulsa Traducir para descargar el paquete del idioma (una vez, unos 30 MB).</string>
     <string name="downloading_packs">Descargando %s (una vez, unos 30 MB cada uno)…</string>
-    <string name="err_unsupported">La traducción sin conexión no admite este idioma (%s).</string>
+    <string name="err_unsupported">La traducción sin conexión no incluye este idioma (%s). Usa «Abrir en Google Traductor».</string>
     <string name="err_detect">No se ha podido detectar el idioma. Elígelo en De.</string>
     <string name="err_needs_download">El paquete del idioma aún no está descargado.</string>
     <string name="err_download">No se pudo descargar el paquete del idioma. Revisa la conexión (o el ajuste de solo wifi).</string>

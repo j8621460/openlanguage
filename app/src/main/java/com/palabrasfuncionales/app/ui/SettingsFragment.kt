@@ -82,7 +82,7 @@ class SettingsFragment : Fragment() {
     private fun buildOfflineList() {
         val inflater = LayoutInflater.from(requireContext())
         b.offlineList.removeAllViews()
-        for (lang in Languages.all.filter { it.code != "en" }) {
+        for (lang in Languages.all.filter { it.code != "en" && OfflineTranslator.isSupported(it.code) }) {
             val row = ItemOfflineLangBinding.inflate(inflater, b.offlineList, true)
             row.name.text = lang.label
             refreshRow(row, lang)

@@ -21,6 +21,8 @@ object Languages {
         Lang("ru", "Russian", "Русский", "ru-RU"),
         Lang("ar", "Arabic", "العربية", "ar"),
         Lang("ga", "Irish", "Gaeilge", "ga-IE"),
+        Lang("no", "Norwegian", "Norsk", "nb-NO"),
+        Lang("yo", "Yoruba", "Yorùbá", "yo-NG"),
     )
     val spanish = Lang("es", "Spanish", "Español", "es-ES")
     val english = Lang("en", "English", "English", "en-US")
@@ -49,6 +51,12 @@ data class Entry(
 
     /** Text to send to text-to-speech: the native script, never the transliteration. */
     val speakable: String get() = word
+
+    /** Stable id for learning progress (survives data re-ordering). */
+    val cardKey: String get() = "$word|$spanish"
+
+    /** Reading aid shown under the word: transliteration, else pronunciation. */
+    val readingAid: String? get() = translit ?: pron?.let { "[$it]" }
 }
 
 class LanguagePack(val lang: Lang, val entries: List<Entry>) {
